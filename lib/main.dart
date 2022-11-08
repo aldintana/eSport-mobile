@@ -1,26 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:e_sport_mobile/pages/Login.dart';
 
 void main() {
-  runApp(MaterialApp(
-    home: Home(),
-  ));
+  runApp(MyApp());
 }
 
-class Home extends StatefulWidget {
-  @override
-  State<Home> createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Home'),
-        centerTitle: true,
-        backgroundColor: Colors.red,
-      ),
-      body: SafeArea(child: Text('Home')),
+    return MaterialApp(
+      home: Login(),
     );
   }
 }
