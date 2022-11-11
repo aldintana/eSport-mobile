@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:e_sport_mobile/services/APIService.dart';
+import 'package:e_sport_mobile/models/Korisnik.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -12,6 +13,16 @@ class _LoginState extends State<Login> {
   var result = null;
   Future<void> GetData() async {
     result = await APIService.Get('Korisnik');
+    if(result == null)
+      return;
+    var users = result.map((e) => Korisnik.fromJson((e))).toList();
+    print(users);
+    if(users.length > 0){
+      var user = users.where((e)=> e.korisnickoIme == usernameController.text).first;
+      print('a');
+      print(user.toJson());
+      APIService.loggedUserId = user.id;
+    }
   }
 
   @override
@@ -26,12 +37,12 @@ class _LoginState extends State<Login> {
               Text(
                 'eSport',
                 style: TextStyle(
-                    fontSize: 30,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: Colors.green[900]),
               ),
               SizedBox(
-                height: 20,
+                height: 10,
               ),
               TextField(
                 controller: usernameController,
@@ -41,7 +52,7 @@ class _LoginState extends State<Login> {
                     hintText: 'Korisničko ime'),
               ),
               SizedBox(
-                height: 20,
+                height: 10,
               ),
               TextField(
                 controller: passwordController,
@@ -55,10 +66,10 @@ class _LoginState extends State<Login> {
                 ),
               ),
               SizedBox(
-                height: 20,
+                height: 10,
               ),
               Container(
-                  height: 60,
+                  height: 50,
                   width: 300,
                   decoration: BoxDecoration(
                       color: Colors.green[900],
@@ -69,6 +80,7 @@ class _LoginState extends State<Login> {
                         APIService.password = passwordController.text;
                         await GetData();
                         if (result != null) {
+                          Navigator.of(context).pushReplacementNamed('/tereni');
                         } else {
                           showDialog<String>(
                               context: context,
