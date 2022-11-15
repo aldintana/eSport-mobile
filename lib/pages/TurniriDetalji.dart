@@ -85,7 +85,7 @@ class _TurniriDetalji extends State<TurniriDetalji> {
                               context: context,
                               initialDateRange: DateTimeRange(start: DateTime.now(), end: DateTime.now()),
                               firstDate: DateTime(
-                                  2000),
+                                  DateTime.now().year),
                               lastDate: DateTime(2101));
                           if (pickedDate != null) {
                             String formattedDate = DateFormat('dd.MM.yyyy').format(

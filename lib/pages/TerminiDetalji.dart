@@ -85,7 +85,7 @@ class _TerminiDetalji extends State<TerminiDetalji> {
                               context: context,
                               initialDate: DateTime.now(),
                               firstDate: DateTime(
-                                  DateTime.now()),
+                                 DateTime.now().year),
                               lastDate: DateTime(2101));
                           if (pickedDate != null) {
                             String formattedDate = DateFormat('dd.MM.yyyy').format(
