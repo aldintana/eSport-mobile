@@ -1,5 +1,5 @@
 class Teren {
-  final id;
+  final int? id;
   final String? naziv;
   final String? sportNaziv;
 
@@ -11,7 +11,7 @@ class Teren {
 
   factory Teren.fromJson(Map<String, dynamic> json){
     return Teren(
-      id: ['id'],
+      id: json['id'],
       naziv: json['naziv'],
       sportNaziv: json['sportNaziv']
     );

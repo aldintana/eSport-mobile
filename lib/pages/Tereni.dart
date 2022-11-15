@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:e_sport_mobile/models/Teren.dart';
 import 'package:e_sport_mobile/services/APIService.dart';
@@ -34,8 +35,7 @@ class _TereniState extends State<Tereni> {
                       title: TextField(
                         controller: searchController,
                         onChanged: (text) {
-                          setState(()
-                          {
+                          setState(() {
                             filter = text;
                             if (text != '') {
                               GetTereni(text);
@@ -98,10 +98,10 @@ class _TereniState extends State<Tereni> {
   }
 
   Future<List<Teren>> GetTereni([String? search]) async {
-    Map<String, String> queryParams = {'IncludeList': 'Sport'};
-    if (search != null)
-      queryParams = {'TekstPretraga': search, 'IncludeList': 'Sport'};
-    var tereni = await APIService.Get('Teren', queryParams);
+    Map<String, String>? queryParams = null;
+    if (search != null) queryParams = {'TekstPretraga': search};
+    List<String> includeList = ['Sport'];
+    var tereni = await APIService.Get('Teren', queryParams, includeList);
     if (tereni != null) {
       return tereni.map((i) => Teren.fromJson(i)).toList();
     }
@@ -121,7 +121,10 @@ class _TereniState extends State<Tereni> {
       },
       child: Padding(
         padding: EdgeInsets.all(20),
-        child: Text(teren.naziv, style: TextStyle(fontSize: 20),),
+        child: Text(
+          teren.naziv,
+          style: TextStyle(fontSize: 20),
+        ),
       ),
     ));
   }

@@ -1,3 +1,4 @@
+import 'package:e_sport_mobile/pages/TerminiDetalji.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:e_sport_mobile/models/Teren.dart';
@@ -5,7 +6,6 @@ import 'package:e_sport_mobile/models/Teren.dart';
 class TereniDetalji extends StatelessWidget {
   final Teren? teren;
   const TereniDetalji({Key? key, this.teren}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,8 +43,19 @@ class TereniDetalji extends StatelessWidget {
                     color: Colors.green[900],
                     borderRadius: BorderRadius.circular(15)),
                 child: TextButton(
-                  onPressed: () async {},
-                  child: Text('Novi termin', style: TextStyle(color: Colors.white),),
+                  onPressed: () async {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TerminiDetalji(
+                              teren: teren,
+                              termin: null,
+                            )));
+                  },
+                  child: Text(
+                    'Novi termin',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
               SizedBox(
@@ -57,13 +68,22 @@ class TereniDetalji extends StatelessWidget {
                     color: Colors.green[900],
                     borderRadius: BorderRadius.circular(15)),
                 child: TextButton(
-                  onPressed: () async {},
-                  child: Text('Novi turnir', style: TextStyle(color: Colors.white),),
+                  onPressed: () async {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TereniDetalji(
+                                  teren: teren,
+                                )));
+                  },
+                  child: Text(
+                    'Novi turnir',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               )
             ],
           )
-
         ],
       ),
     );

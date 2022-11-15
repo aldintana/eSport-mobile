@@ -16,11 +16,8 @@ class _LoginState extends State<Login> {
     if(result == null)
       return;
     var users = result.map((e) => Korisnik.fromJson((e))).toList();
-    print(users);
     if(users.length > 0){
       var user = users.where((e)=> e.korisnickoIme == usernameController.text).first;
-      print('a');
-      print(user.toJson());
       APIService.loggedUserId = user.id;
     }
   }
