@@ -2,29 +2,29 @@ import 'package:e_sport_mobile/models/Cjenovnik.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
-import 'package:e_sport_mobile/models/Termin.dart';
+import 'package:e_sport_mobile/models/Turnir.dart';
 import 'package:e_sport_mobile/models/Teren.dart';
 import 'package:intl/intl.dart';
-import 'package:foundation_flutter/foundation.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:e_sport_mobile/services/APIService.dart';
 
-class TerminiDetalji extends StatefulWidget {
-  final Termin? termin;
+class TurniriDetalji extends StatefulWidget {
+  final Turnir? turnir;
   final Teren? teren;
-  const TerminiDetalji({Key? key, this.teren, this.termin}) : super(key: key);
+  const TurniriDetalji({Key? key, this.teren, this.turnir}) : super(key: key);
   @override
-  _TerminiDetalji createState() => _TerminiDetalji();
+  _TurniriDetalji createState() => _TurniriDetalji();
 }
 
-class _TerminiDetalji extends State<TerminiDetalji> {
+class _TurniriDetalji extends State<TurniriDetalji> {
   TextEditingController datumController = new TextEditingController();
   TextEditingController cijenaController = new TextEditingController();
   int vrijemePocetka = 9;
   int vrijemeZavrsetka = 10;
   Cjenovnik? _selectedCjenovnik = null;
   int _cijena = 0;
-  DateTime? _datum;
+  DateTime? _datumPocetka;
+  DateTime? _datumKraja;
   var pocetak = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22];
   var kraj = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
   List<DropdownMenuItem> _cjenovnici = [];
@@ -41,7 +41,7 @@ class _TerminiDetalji extends State<TerminiDetalji> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Detalji termina'),
+        title: Text('Detalji turnira'),
       ),
       body: Center(
         child: Column(
@@ -78,21 +78,24 @@ class _TerminiDetalji extends State<TerminiDetalji> {
                         controller: datumController,
                         decoration: const InputDecoration(
                             icon: Icon(Icons.calendar_today),
-                            labelText: "Odaberite datum"),
+                            labelText: "Odaberite period"),
                         readOnly: true,
                         onTap: () async {
-                          DateTime? pickedDate = await showDatePicker(
+                          DateTimeRange? pickedDate = await showDateRangePicker(
                               context: context,
-                              initialDate: DateTime.now(),
+                              initialDateRange: DateTimeRange(start: DateTime.now(), end: DateTime.now()),
                               firstDate: DateTime(
-                                  DateTime.now()),
+                                  2000),
                               lastDate: DateTime(2101));
                           if (pickedDate != null) {
                             String formattedDate = DateFormat('dd.MM.yyyy').format(
-                                pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
+                                pickedDate.start) + ' - ' + DateFormat('dd.MM.yyyy').format(
+                                pickedDate.end);
                             setState(() {
                               datumController.text = formattedDate;
-                              _datum = pickedDate;
+                              _datumPocetka = pickedDate.start;
+                              _datumKraja = pickedDate.end;
+                              IzracunajCijenu();
                             });
                           }
                         },
@@ -111,7 +114,7 @@ class _TerminiDetalji extends State<TerminiDetalji> {
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: HexColor('#ecedec'),
-                        labelText: 'Vrijeme pocetka',
+                        labelText: 'Vrijeme početka',
                       ),
                       items: pocetak.map<DropdownMenuItem<int>>((int item) {
                         return DropdownMenuItem<int>(
@@ -137,7 +140,7 @@ class _TerminiDetalji extends State<TerminiDetalji> {
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: HexColor('#ecedec'),
-                        labelText: 'Vrijeme zavrsetka',
+                        labelText: 'Vrijeme završetka',
                       ),
                       items: kraj.map<DropdownMenuItem<int>>((int item) {
                         return DropdownMenuItem<int>(
@@ -195,7 +198,7 @@ class _TerminiDetalji extends State<TerminiDetalji> {
                               if (!_formKey.currentState!.validate()) {
                                 return;
                               }
-                              var result = await CreateTermin();
+                              var result = await CreateTurnir();
                               if (result != null) {
                                 Navigator.of(context)
                                     .pushReplacementNamed('/tereni');
@@ -282,30 +285,31 @@ class _TerminiDetalji extends State<TerminiDetalji> {
   }
 
   void IzracunajCijenu() {
-    if(_selectedCjenovnik!.isDnevna == true)
+    if(_selectedCjenovnik != null && _datumKraja != null && _datumKraja != null)
     {
-      _cijena = _selectedCjenovnik?.cijena ?? 0;
+      if(_selectedCjenovnik!.isDnevna == true)
+      {
+        _cijena = ((_datumKraja!.difference(_datumPocetka!).inDays + 1) * (_selectedCjenovnik?.cijena ?? 0));
+      }
+      else{
+        _cijena = (_datumKraja!.difference(_datumPocetka!).inDays + 1) * (vrijemeZavrsetka - vrijemePocetka) * (_selectedCjenovnik?.cijena ?? 0);
+      }
+      cijenaController.text = "Cijena: $_cijena KM";
     }
-    else{
-      var sati = vrijemeZavrsetka - vrijemePocetka;
-      _cijena = sati * (_selectedCjenovnik?.cijena ?? 0);
-    }
-    cijenaController.text = "Cijena: $_cijena KM";
   }
 
-  Future<dynamic> CreateTermin() async {
-    var termin = Termin(
+  Future<dynamic> CreateTurnir() async {
+    var turnir = Turnir(
       terenId: this.widget.teren!.id,
       cjenovnikId: _selectedCjenovnik!.id,
       ukupnaCijena: _cijena,
       korisnikId: APIService.loggedUserId,
-      datum: _datum,
-      pocetak: new DateTime(
-          _datum!.year, _datum!.month, _datum!.day, vrijemePocetka!, 0, 0),
-      kraj: new DateTime(
-          _datum!.year, _datum!.month, _datum!.day, vrijemeZavrsetka!, 0, 0),
+      datumPocetka: _datumPocetka,
+      datumKraja: _datumKraja,
+      vrijemeKraja: vrijemeZavrsetka,
+      vrijemePocetka:  vrijemePocetka
     );
-    result = await APIService.Post('Termin', jsonEncode(termin).toString());
+    result = await APIService.Post('Turnir', jsonEncode(turnir).toString());
     return result;
   }
 }

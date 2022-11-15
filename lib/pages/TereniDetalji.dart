@@ -1,4 +1,5 @@
 import 'package:e_sport_mobile/pages/TerminiDetalji.dart';
+import 'package:e_sport_mobile/pages/TurniriDetalji.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:e_sport_mobile/models/Teren.dart';
@@ -72,7 +73,7 @@ class TereniDetalji extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => TereniDetalji(
+                            builder: (context) => TurniriDetalji(
                                   teren: teren,
                                 )));
                   },
