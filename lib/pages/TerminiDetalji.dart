@@ -89,7 +89,7 @@ class _TerminiDetalji extends State<TerminiDetalji> {
                               lastDate: DateTime(2101));
                           if (pickedDate != null) {
                             String formattedDate = DateFormat('dd.MM.yyyy').format(
-                                pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
+                                pickedDate);
                             setState(() {
                               datumController.text = formattedDate;
                               _datum = pickedDate;

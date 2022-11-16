@@ -30,7 +30,8 @@ class Termin {
         terenId: int.parse(json['terenId'].toString()),
         cjenovnikId: int.parse(json['cjenovnikId'].toString()),
         ukupnaCijena: int.parse(json['ukupnaCijena'].toString()),
-        korisnikId: int.parse(json['korisnikId'].toString())
+        korisnikId: int.parse(json['korisnikId'].toString()),
+        terenNaziv: json['terenNaziv'].toString()
     );
   }
 

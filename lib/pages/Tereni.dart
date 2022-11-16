@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:core';
+import 'package:e_sport_mobile/pages/Termini.dart';
+import 'package:e_sport_mobile/pages/Turniri.dart';
 import 'package:flutter/material.dart';
 import 'package:e_sport_mobile/models/Teren.dart';
 import 'package:e_sport_mobile/services/APIService.dart';
@@ -68,6 +70,37 @@ class _TereniState extends State<Tereni> {
               icon: customIcon)
         ],
         centerTitle: true,
+      ),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            DrawerHeader(
+              child: Center(
+                  child: Text(
+                'eSport',
+                style: TextStyle(fontSize: 20, color: Colors.white),
+              )),
+              decoration: BoxDecoration(color: Colors.blue[700]),
+            ),
+            ListTile(
+              title: Text('Moji termini'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Termini()));
+              },
+            ),
+            ListTile(
+                title: Text('Moji turniri'),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Turniri()));
+                })
+          ],
+        ),
       ),
       body: bodyWidget(),
     );
