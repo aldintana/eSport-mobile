@@ -48,7 +48,6 @@ class APIService {
     final String basicAuth =
         'Basic ' + base64Encode(utf8.encode('$username:$password'));
     var response = null;
-    print(body);
     if(username.isNotEmpty && password.isNotEmpty) {
       response = await http.post(
         Uri.parse(baseUrl),

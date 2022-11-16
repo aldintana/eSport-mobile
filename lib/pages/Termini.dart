@@ -49,7 +49,9 @@ class _TerminiState extends State<Termini> {
   }
 
   Future<List<Termin>> GetTermini() async {
-    Map<String, String>? queryParams = {'KorisnikId': APIService.loggedUserId.toString()};
+    Map<String, String>? queryParams = {
+      'KorisnikId': APIService.loggedUserId.toString()
+    };
     List<String> includeList = ['Teren'];
     var termini = await APIService.Get('Termin', queryParams, includeList);
     if (termini != null) {
@@ -60,12 +62,21 @@ class _TerminiState extends State<Termini> {
 
   Widget TerminWidget(termin) {
     return Card(
-        child: Padding(
-          padding: EdgeInsets.all(20),
-          child: Text(
-           termin.terenNaziv + ' - ' + DateFormat('dd.MM.yyyy').format(termin.datum) + ' - ' + termin.pocetak.hour.toString() + 'h - ' + termin.kraj.hour.toString() + 'h ' + termin.ukupnaCijena.toString() + 'KM',
-            style: TextStyle(fontSize: 20),
-          ),
+      child: Padding(
+        padding: EdgeInsets.all(20),
+        child: Text(
+          termin.terenNaziv +
+              ' - ' +
+              DateFormat('dd.MM.yyyy').format(termin.datum) +
+              ' - ' +
+              termin.pocetak.hour.toString() +
+              'h - ' +
+              termin.kraj.hour.toString() +
+              'h ' +
+              termin.ukupnaCijena.toString() +
+              'KM',
+          style: TextStyle(fontSize: 20),
+        ),
       ),
     );
   }

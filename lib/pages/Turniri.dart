@@ -3,6 +3,7 @@ import 'dart:core';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:e_sport_mobile/models/Turnir.dart';
+import 'package:e_sport_mobile/pages/TurniriPregled.dart';
 import 'package:e_sport_mobile/services/APIService.dart';
 import 'package:intl/intl.dart';
 
@@ -49,7 +50,9 @@ class _TurniriState extends State<Turniri> {
   }
 
   Future<List<Turnir>> GetTurniri() async {
-    Map<String, String>? queryParams = {'KorisnikId': APIService.loggedUserId.toString()};
+    Map<String, String>? queryParams = {
+      'KorisnikId': APIService.loggedUserId.toString()
+    };
     List<String> includeList = ['Teren'];
     var turniri = await APIService.Get('Turnir', queryParams, includeList);
     if (turniri != null) {
@@ -60,12 +63,37 @@ class _TurniriState extends State<Turniri> {
 
   Widget TurnirWidget(turnir) {
     return Card(
-        child: Padding(
-          padding: EdgeInsets.all(20),
+      child: Padding(
+        padding: EdgeInsets.all(20),
+        child: TextButton(
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => TurniriPregled(
+                          turnir: turnir,
+                        )));
+          },
           child: Text(
-            turnir.terenNaziv + ' - ' + DateFormat('dd.MM.yyyy').format(turnir.datumPocetka) + ' - ' + DateFormat('dd.MM.yyyy').format(turnir.datumKraja) + ' ' + turnir.vrijemePocetka.toString() + 'h - ' + turnir.vrijemeKraja.toString() + 'h - ' + turnir.ukupnaCijena.toString() + 'KM',
+            turnir.terenNaziv +
+                ' - ' +
+                DateFormat('dd.MM.yyyy').format(turnir.datumPocetka) +
+                ' - ' +
+                DateFormat('dd.MM.yyyy').format(turnir.datumKraja) +
+                ' ' +
+                turnir.vrijemePocetka.toString() +
+                'h - ' +
+                turnir.vrijemeKraja.toString() +
+                'h - ' +
+                turnir.ukupnaCijena.toString() +
+                'KM',
             style: TextStyle(fontSize: 20),
           ),
+        ),
+        // child: Text(
+        //   turnir.terenNaziv + ' - ' + DateFormat('dd.MM.yyyy').format(turnir.datumPocetka) + ' - ' + DateFormat('dd.MM.yyyy').format(turnir.datumKraja) + ' ' + turnir.vrijemePocetka.toString() + 'h - ' + turnir.vrijemeKraja.toString() + 'h - ' + turnir.ukupnaCijena.toString() + 'KM',
+        //   style: TextStyle(fontSize: 20),
+        // ),
       ),
     );
   }

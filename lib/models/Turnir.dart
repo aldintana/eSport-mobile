@@ -10,6 +10,7 @@ class Turnir {
   final int? korisnikId;
   final int? ukupnaCijena;
   final String? terenNaziv;
+  final bool? isGenerisan;
 
   Turnir({
     this.id,
@@ -22,7 +23,8 @@ class Turnir {
     this.cjenovnikId,
     this.korisnikId,
     this.ukupnaCijena,
-    this.terenNaziv
+    this.terenNaziv,
+    this.isGenerisan
   });
 
   factory Turnir.fromJson(Map<String, dynamic> json){
@@ -36,7 +38,9 @@ class Turnir {
         cjenovnikId: int.parse(json['cjenovnikId'].toString()),
         ukupnaCijena: int.parse(json['ukupnaCijena'].toString()),
         korisnikId: int.parse(json['korisnikId'].toString()),
-        terenNaziv: json['terenNaziv'].toString()
+        terenNaziv: json['terenNaziv'].toString(),
+        naziv: json['naziv'].toString(),
+        isGenerisan: json['isGenerisan']
     );
   }
 
@@ -50,6 +54,8 @@ class Turnir {
     "cjenovnikId": cjenovnikId,
     "ukupnaCijena": ukupnaCijena,
     "terenNaziv": terenNaziv,
-    "korisnikId": korisnikId
+    "korisnikId": korisnikId,
+    "naziv": naziv,
+    "isGenerisan": isGenerisan
   };
 }
