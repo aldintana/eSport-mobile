@@ -9,6 +9,7 @@ class Korisnik {
   final bool? updateUloga;
   final String? lozinka;
   final String? lozinkaProvjera;
+  final int? bodovi;
 
   Korisnik({
     this.id,
@@ -19,7 +20,8 @@ class Korisnik {
     this.korisnickoIme,
     this.updateUloga,
     this.lozinka,
-    this.lozinkaProvjera
+    this.lozinkaProvjera,
+    this.bodovi
   });
 
   factory Korisnik.fromJson(Map<String, dynamic> json){
@@ -29,7 +31,8 @@ class Korisnik {
       prezime: json['prezime'],
       email: json['email'],
       brojTelefona: json['brojTelefona'],
-      korisnickoIme: json['korisnickoIme']
+      korisnickoIme: json['korisnickoIme'],
+      bodovi: json['bodovi']
     );
   }
 

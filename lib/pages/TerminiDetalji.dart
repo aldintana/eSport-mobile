@@ -28,6 +28,7 @@ class _TerminiDetalji extends State<TerminiDetalji> {
   var pocetak = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22];
   var kraj = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
   List<DropdownMenuItem> _cjenovnici = [];
+  bool isPopust = false;
   var result = null;
   final _formKey = GlobalKey<FormState>();
   @override
@@ -184,6 +185,19 @@ class _TerminiDetalji extends State<TerminiDetalji> {
                     SizedBox(
                       height: 15,
                     ),
+                    if(APIService.bodovi >= 30)
+                      CheckboxListTile(
+                        title: Text('Iskoristi popust'),
+                        value: isPopust,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            isPopust = value!;
+                            IzracunajCijenu();
+                          });
+                    }),
+                    SizedBox(
+                      height: 15,
+                    ),
                     Container(
                         height: 50,
                         width: 300,
@@ -290,6 +304,10 @@ class _TerminiDetalji extends State<TerminiDetalji> {
       var sati = vrijemeZavrsetka - vrijemePocetka;
       _cijena = sati * (_selectedCjenovnik?.cijena ?? 0);
     }
+    if(isPopust)
+    {
+      _cijena = _cijena - (_cijena ~/ 10);
+    }
     cijenaController.text = "Cijena: $_cijena KM";
   }
 
@@ -304,8 +322,13 @@ class _TerminiDetalji extends State<TerminiDetalji> {
           _datum!.year, _datum!.month, _datum!.day, vrijemePocetka!, 0, 0),
       kraj: new DateTime(
           _datum!.year, _datum!.month, _datum!.day, vrijemeZavrsetka!, 0, 0),
+      isPopust: isPopust
     );
     result = await APIService.Post('Termin', jsonEncode(termin).toString());
+    APIService.bodovi += 10;
+    if(isPopust) {
+      APIService.bodovi -= 30;
+    }
     return result;
   }
 }

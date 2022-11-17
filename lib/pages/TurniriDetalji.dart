@@ -29,6 +29,7 @@ class _TurniriDetalji extends State<TurniriDetalji> {
   var pocetak = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22];
   var kraj = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
   List<DropdownMenuItem> _cjenovnici = [];
+  bool isPopust = false;
   var result = null;
   final _formKey = GlobalKey<FormState>();
   @override
@@ -46,208 +47,220 @@ class _TurniriDetalji extends State<TurniriDetalji> {
         title: Text('Detalji turnira'),
       ),
       body: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Padding(
-                padding: EdgeInsets.all(10),
-                child: Center(
-                  child: Text(
-                    this.widget.teren?.naziv.toString() ?? '',
-                    style: TextStyle(color: Colors.blue, fontSize: 30),
-                  ),
+          child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(10),
+              child: Center(
+                child: Text(
+                  this.widget.teren?.naziv.toString() ?? '',
+                  style: TextStyle(color: Colors.blue, fontSize: 30),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.all(10),
-                child: Center(
-                  child: Text(
-                    ('Sport: ' + (this.widget.teren?.sportNaziv ?? ' ')),
-                    style: TextStyle(fontSize: 20),
-                  ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(10),
+              child: Center(
+                child: Text(
+                  ('Sport: ' + (this.widget.teren?.sportNaziv ?? ' ')),
+                  style: TextStyle(fontSize: 20),
                 ),
               ),
-              Padding(padding: EdgeInsets.all(10)),
-              Form(
-                  key: _formKey,
-                  child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          TextFormField(
-                            controller: nazivController,
-                            decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15)),
-                                hintText: 'Naziv'),
-                            validator: (value) {
-                              if (value == null || value.isEmpty)
-                                return 'Naziv je obavezan!';
-                              else
-                                return null;
-                            },
-                          ),
-                          Container(
-                            height: 50,
-                            // width: 170,
-                            child: TextFormField(
-                              controller: datumController,
-                              decoration: const InputDecoration(
-                                  icon: Icon(Icons.calendar_today),
-                                  labelText: "Odaberite period"),
-                              readOnly: true,
-                              onTap: () async {
-                                DateTimeRange? pickedDate = await showDateRangePicker(
+            ),
+            Padding(padding: EdgeInsets.all(10)),
+            Form(
+                key: _formKey,
+                child: SingleChildScrollView(
+                    child: Column(
+                  children: [
+                    TextFormField(
+                      controller: nazivController,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15)),
+                          hintText: 'Naziv'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty)
+                          return 'Naziv je obavezan!';
+                        else
+                          return null;
+                      },
+                    ),
+                    Container(
+                      height: 50,
+                      // width: 170,
+                      child: TextFormField(
+                        controller: datumController,
+                        decoration: const InputDecoration(
+                            icon: Icon(Icons.calendar_today),
+                            labelText: "Odaberite period"),
+                        readOnly: true,
+                        onTap: () async {
+                          DateTimeRange? pickedDate = await showDateRangePicker(
+                              context: context,
+                              initialDateRange: DateTimeRange(
+                                  start: DateTime.now(), end: DateTime.now()),
+                              firstDate: DateTime(DateTime.now().year),
+                              lastDate: DateTime(2101));
+                          if (pickedDate != null) {
+                            String formattedDate = DateFormat('dd.MM.yyyy')
+                                    .format(pickedDate.start) +
+                                ' - ' +
+                                DateFormat('dd.MM.yyyy').format(pickedDate.end);
+                            setState(() {
+                              datumController.text = formattedDate;
+                              _datumPocetka = pickedDate.start;
+                              _datumKraja = pickedDate.end;
+                              IzracunajCijenu();
+                            });
+                          }
+                        },
+                        validator: (value) {
+                          if (value == null || value.isEmpty)
+                            return 'Datum je obavezan!';
+                          else
+                            return null;
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    DropdownButtonFormField<int>(
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: HexColor('#ecedec'),
+                        labelText: 'Vrijeme početka',
+                      ),
+                      items: pocetak.map<DropdownMenuItem<int>>((int item) {
+                        return DropdownMenuItem<int>(
+                          value: item,
+                          child: Text(item.toString()),
+                        );
+                      }).toList(),
+                      value: vrijemePocetka,
+                      icon: const Icon(Icons.keyboard_arrow_down),
+                      onChanged: (int? newValue) {
+                        setState(() {
+                          vrijemePocetka = newValue!;
+                          if (vrijemeZavrsetka <= vrijemePocetka)
+                            vrijemeZavrsetka = vrijemePocetka + 1;
+                          IzracunajCijenu();
+                        });
+                      },
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    DropdownButtonFormField<int>(
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: HexColor('#ecedec'),
+                        labelText: 'Vrijeme završetka',
+                      ),
+                      items: kraj.map<DropdownMenuItem<int>>((int item) {
+                        return DropdownMenuItem<int>(
+                          value: item,
+                          child: Text(item.toString()),
+                        );
+                      }).toList(),
+                      value: vrijemeZavrsetka,
+                      icon: const Icon(Icons.keyboard_arrow_down),
+                      onChanged: (int? newValue) {
+                        setState(() {
+                          if (newValue! > vrijemePocetka) {
+                            vrijemeZavrsetka = newValue!;
+                            IzracunajCijenu();
+                          } else {
+                            showDialog<String>(
+                                context: context,
+                                builder: (BuildContext context) => AlertDialog(
+                                      title: const Text('Pogrešno vrijeme'),
+                                      content: const Text(
+                                          'Vrijeme završetka mora biti veće od vremena početka'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(context, 'Ok'),
+                                            child: const Text('Ok')),
+                                      ],
+                                    ));
+                          }
+                        });
+                      },
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    CjenovnikDropDownWidget(),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    TextField(
+                      controller: cijenaController,
+                      readOnly: true,
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    if (APIService.bodovi >= 40)
+                      CheckboxListTile(
+                          title: Text('Iskoristi popust'),
+                          value: isPopust,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              isPopust = value!;
+                              IzracunajCijenu();
+                            });
+                          }),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Container(
+                        height: 50,
+                        width: 300,
+                        decoration: BoxDecoration(
+                            color: Colors.green[900],
+                            borderRadius: BorderRadius.circular(15)),
+                        child: TextButton(
+                            onPressed: () async {
+                              if (!_formKey.currentState!.validate()) {
+                                return;
+                              }
+                              var result = await CreateTurnir();
+                              if (result != null) {
+                                Navigator.of(context)
+                                    .pushReplacementNamed('/tereni');
+                              } else {
+                                showDialog<String>(
                                     context: context,
-                                    initialDateRange: DateTimeRange(
-                                        start: DateTime.now(), end: DateTime.now()),
-                                    firstDate: DateTime(DateTime.now().year),
-                                    lastDate: DateTime(2101));
-                                if (pickedDate != null) {
-                                  String formattedDate = DateFormat('dd.MM.yyyy')
-                                      .format(pickedDate.start) +
-                                      ' - ' +
-                                      DateFormat('dd.MM.yyyy').format(pickedDate.end);
-                                  setState(() {
-                                    datumController.text = formattedDate;
-                                    _datumPocetka = pickedDate.start;
-                                    _datumKraja = pickedDate.end;
-                                    IzracunajCijenu();
-                                  });
-                                }
-                              },
-                              validator: (value) {
-                                if (value == null || value.isEmpty)
-                                  return 'Datum je obavezan!';
-                                else
-                                  return null;
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          DropdownButtonFormField<int>(
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: HexColor('#ecedec'),
-                              labelText: 'Vrijeme početka',
-                            ),
-                            items: pocetak.map<DropdownMenuItem<int>>((int item) {
-                              return DropdownMenuItem<int>(
-                                value: item,
-                                child: Text(item.toString()),
-                              );
-                            }).toList(),
-                            value: vrijemePocetka,
-                            icon: const Icon(Icons.keyboard_arrow_down),
-                            onChanged: (int? newValue) {
-                              setState(() {
-                                vrijemePocetka = newValue!;
-                                if (vrijemeZavrsetka <= vrijemePocetka)
-                                  vrijemeZavrsetka = vrijemePocetka + 1;
-                                IzracunajCijenu();
-                              });
+                                    builder: (BuildContext context) =>
+                                        AlertDialog(
+                                          title: const Text(
+                                              'Nije moguće dodati turnir'),
+                                          content: const Text(
+                                              'Nije moguće dodati turnir. Pokušajte drugi datum/satnicu'),
+                                          actions: <Widget>[
+                                            TextButton(
+                                                onPressed: () => Navigator.pop(
+                                                    context, 'Ok'),
+                                                child: const Text('Ok')),
+                                          ],
+                                        ));
+                              }
                             },
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          DropdownButtonFormField<int>(
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: HexColor('#ecedec'),
-                              labelText: 'Vrijeme završetka',
-                            ),
-                            items: kraj.map<DropdownMenuItem<int>>((int item) {
-                              return DropdownMenuItem<int>(
-                                value: item,
-                                child: Text(item.toString()),
-                              );
-                            }).toList(),
-                            value: vrijemeZavrsetka,
-                            icon: const Icon(Icons.keyboard_arrow_down),
-                            onChanged: (int? newValue) {
-                              setState(() {
-                                if (newValue! > vrijemePocetka) {
-                                  vrijemeZavrsetka = newValue!;
-                                  IzracunajCijenu();
-                                } else {
-                                  showDialog<String>(
-                                      context: context,
-                                      builder: (BuildContext context) => AlertDialog(
-                                        title: const Text('Pogrešno vrijeme'),
-                                        content: const Text(
-                                            'Vrijeme završetka mora biti veće od vremena početka'),
-                                        actions: <Widget>[
-                                          TextButton(
-                                              onPressed: () =>
-                                                  Navigator.pop(context, 'Ok'),
-                                              child: const Text('Ok')),
-                                        ],
-                                      ));
-                                }
-                              });
-                            },
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          CjenovnikDropDownWidget(),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          TextField(
-                            controller: cijenaController,
-                            readOnly: true,
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          Container(
-                              height: 50,
-                              width: 300,
-                              decoration: BoxDecoration(
-                                  color: Colors.green[900],
-                                  borderRadius: BorderRadius.circular(15)),
-                              child: TextButton(
-                                  onPressed: () async {
-                                    if (!_formKey.currentState!.validate()) {
-                                      return;
-                                    }
-                                    var result = await CreateTurnir();
-                                    if (result != null) {
-                                      Navigator.of(context)
-                                          .pushReplacementNamed('/tereni');
-                                    } else {
-                                      showDialog<String>(
-                                          context: context,
-                                          builder: (BuildContext context) =>
-                                              AlertDialog(
-                                                title: const Text(
-                                                    'Nije moguće dodati turnir'),
-                                                content: const Text(
-                                                    'Nije moguće dodati turnir. Pokušajte drugi datum/satnicu'),
-                                                actions: <Widget>[
-                                                  TextButton(
-                                                      onPressed: () => Navigator.pop(
-                                                          context, 'Ok'),
-                                                      child: const Text('Ok')),
-                                                ],
-                                              ));
-                                    }
-                                  },
-                                  child: Text(
-                                    'Sačuvaj',
-                                    style:
-                                    TextStyle(color: Colors.white, fontSize: 20),
-                                  )))
-                        ],
-                      )))
-            ],
-          ),
-        )
-      ),
+                            child: Text(
+                              'Sačuvaj',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20),
+                            )))
+                  ],
+                )))
+          ],
+        ),
+      )),
     );
   }
 
@@ -315,6 +328,9 @@ class _TurniriDetalji extends State<TurniriDetalji> {
             (vrijemeZavrsetka - vrijemePocetka) *
             (_selectedCjenovnik?.cijena ?? 0);
       }
+      if (isPopust) {
+        _cijena = _cijena - (_cijena ~/ 10);
+      }
       cijenaController.text = "Cijena: $_cijena KM";
     }
   }
@@ -329,8 +345,14 @@ class _TurniriDetalji extends State<TurniriDetalji> {
         datumKraja: _datumKraja,
         vrijemeKraja: vrijemeZavrsetka,
         vrijemePocetka: vrijemePocetka,
-        naziv: nazivController.text);
+        naziv: nazivController.text,
+        isPopust: isPopust);
     result = await APIService.Post('Turnir', jsonEncode(turnir).toString());
+    APIService.bodovi += 20;
+    if (isPopust) {
+      APIService.bodovi -= 40;
+    }
+
     return result;
   }
 }

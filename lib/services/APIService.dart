@@ -7,14 +7,16 @@ class APIService {
   static String username = "";
   static String password = "";
   static int loggedUserId = 0;
+  static int bodovi = 0;
   String route = "";
 
   APIService({this.route = ""});
 
-  void SetParameters(String Username, String Password, int LoggedUserId) {
+  void SetParameters(String Username, String Password, int LoggedUserId, int bodovi) {
     username = Username;
     password = Password;
     loggedUserId = LoggedUserId;
+    bodovi = bodovi;
   }
 
   static Future<List<dynamic>?> Get(String route, [dynamic object, List<String>? includeList]) async {

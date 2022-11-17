@@ -19,6 +19,7 @@ class _LoginState extends State<Login> {
     if(users.length > 0){
       var user = users.where((e)=> e.korisnickoIme == usernameController.text).first;
       APIService.loggedUserId = user.id;
+      APIService.bodovi = user.bodovi;
     }
   }
 

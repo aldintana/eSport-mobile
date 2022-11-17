@@ -8,6 +8,7 @@ class Termin {
   final int? korisnikId;
   final int? ukupnaCijena;
   final String? terenNaziv;
+  final bool? isPopust;
 
   Termin({
     this.id,
@@ -18,7 +19,8 @@ class Termin {
     this.cjenovnikId,
     this.korisnikId,
     this.ukupnaCijena,
-    this.terenNaziv
+    this.terenNaziv,
+    this.isPopust
   });
 
   factory Termin.fromJson(Map<String, dynamic> json){
@@ -44,6 +46,7 @@ class Termin {
     "cjenovnikId": cjenovnikId,
     "ukupnaCijena": ukupnaCijena,
     "terenNaziv": terenNaziv,
-    "korisnikId": korisnikId
+    "korisnikId": korisnikId,
+    "isPopust": isPopust
   };
 }

@@ -78,7 +78,7 @@ class _TereniState extends State<Tereni> {
             DrawerHeader(
               child: Center(
                   child: Text(
-                'eSport',
+                'eSport: ' + APIService.bodovi.toString() + ' bodova',
                 style: TextStyle(fontSize: 20, color: Colors.white),
               )),
               decoration: BoxDecoration(color: Colors.blue[700]),
