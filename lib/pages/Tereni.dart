@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:core';
+import 'package:e_sport_mobile/pages/KorisnikDetalji.dart';
 import 'package:e_sport_mobile/pages/Termini.dart';
 import 'package:e_sport_mobile/pages/Turniri.dart';
 import 'package:flutter/material.dart';
@@ -81,6 +82,15 @@ class _TereniState extends State<Tereni> {
                 style: TextStyle(fontSize: 20, color: Colors.white),
               )),
               decoration: BoxDecoration(color: Colors.blue[700]),
+            ),
+            ListTile(
+              title: Text('Profil'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => KorisnikDetalji()));
+              },
             ),
             ListTile(
               title: Text('Moji termini'),

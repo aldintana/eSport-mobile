@@ -75,6 +75,7 @@ class _TurniriState extends State<Turniri> {
                         )));
           },
           child: Text(
+            turnir.naziv + ' - ' +
             turnir.terenNaziv +
                 ' - ' +
                 DateFormat('dd.MM.yyyy').format(turnir.datumPocetka) +

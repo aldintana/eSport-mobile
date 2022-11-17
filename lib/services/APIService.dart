@@ -43,6 +43,32 @@ class APIService {
     return null;
   }
 
+  static Future<dynamic?> GetById(int id, String route, [dynamic object, List<String>? includeList]) async {
+    String queryParams = Uri(queryParameters: object).query;
+    if(includeList != null && includeList.length > 0){
+      includeList.asMap().forEach((index, element) {
+        if(index == 0 && object == null){
+          queryParams = "IncludeList=${element}";
+        }
+        else {
+          queryParams += "&IncludeList=${element}";
+        }
+      });
+    }
+    String baseUrl = "http://192.168.0.33:44366/api/" + route + '/' + id.toString();
+    if (object != null) {
+      baseUrl = baseUrl + '?' + queryParams;
+    }
+    final String basicAuth =
+        'Basic ' + base64Encode(utf8.encode('$username:$password'));
+    final response = await http.get(Uri.parse(baseUrl),
+        headers: {HttpHeaders.authorizationHeader: basicAuth});
+    if (response.statusCode == 200) {
+      return JsonDecoder().convert(response.body);
+    }
+    return null;
+  }
+
   static Future<dynamic> Post(String route, String body) async {
     String baseUrl="http://192.168.0.33:44366/api/"+route;
     final String basicAuth =
@@ -79,4 +105,42 @@ class APIService {
     }
     return null;
   }
+
+  static Future<dynamic> Put(int id, String route, String body) async {
+    String baseUrl="http://192.168.0.33:44366/api/"+route+'/'+id.toString();
+    final String basicAuth =
+        'Basic ' + base64Encode(utf8.encode('$username:$password'));
+    var response = null;
+    if(username.isNotEmpty && password.isNotEmpty) {
+      response = await http.put(
+        Uri.parse(baseUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': basicAuth
+        },
+        body: body,
+      );
+    }
+    else{
+      response = await http.put(
+        Uri.parse(baseUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8'
+        },
+        body: body,
+      );
+    }
+
+    if(response.statusCode == 200 && response.body.isEmpty){
+      return "200";
+    }
+    if(response.statusCode != 200 && response.body.isEmpty){
+      return "500";
+    }
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    }
+    return null;
+  }
+
 }

@@ -5,6 +5,10 @@ class Korisnik {
   final String? email;
   final String? brojTelefona;
   final String? korisnickoIme;
+  List<int>? ulogas;
+  final bool? updateUloga;
+  final String? lozinka;
+  final String? lozinkaProvjera;
 
   Korisnik({
     this.id,
@@ -12,7 +16,10 @@ class Korisnik {
     this.prezime,
     this.email,
     this.brojTelefona,
-    this.korisnickoIme
+    this.korisnickoIme,
+    this.updateUloga,
+    this.lozinka,
+    this.lozinkaProvjera
   });
 
   factory Korisnik.fromJson(Map<String, dynamic> json){
@@ -32,6 +39,9 @@ class Korisnik {
     "prezime": prezime,
     "email": email,
     "brojTelefona": brojTelefona,
-    "korisnickoIme": korisnickoIme
+    "korisnickoIme": korisnickoIme,
+    "updateUloga": updateUloga,
+    "lozinka": lozinka,
+    "lozinkaProvjera": lozinkaProvjera
   };
 }
