@@ -190,6 +190,12 @@ class _TurniriDetalji extends State<TurniriDetalji> {
                           }
                         });
                       },
+                      validator: (value) {
+                        if (value! < vrijemePocetka)
+                          return 'Vrijeme zavrsetka mora biti vece od vremena pocetka';
+                        else
+                          return null;
+                      },
                     ),
                     SizedBox(
                       height: 15,

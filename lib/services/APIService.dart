@@ -145,4 +145,10 @@ class APIService {
     return null;
   }
 
+  static void Logout(){
+    APIService.username = "";
+    APIService.password = "";
+    APIService.loggedUserId = 0;
+    APIService.bodovi = 0;
+  }
 }

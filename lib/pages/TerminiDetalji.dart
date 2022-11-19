@@ -296,7 +296,7 @@ class _TerminiDetalji extends State<TerminiDetalji> {
   }
 
   void IzracunajCijenu() {
-    if(_selectedCjenovnik!.isDnevna == true)
+    if(_selectedCjenovnik != null && _selectedCjenovnik!.isDnevna == true)
     {
       _cijena = _selectedCjenovnik?.cijena ?? 0;
     }

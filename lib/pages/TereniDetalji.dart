@@ -3,6 +3,7 @@ import 'package:e_sport_mobile/pages/TurniriDetalji.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:e_sport_mobile/models/Teren.dart';
+import 'package:e_sport_mobile/models/Sport.dart';
 
 class TereniDetalji extends StatelessWidget {
   final Teren? teren;
@@ -34,7 +35,7 @@ class TereniDetalji extends StatelessWidget {
               ),
             ),
           ),
-          Row(
+          Column(
             children: [
               Padding(padding: EdgeInsets.all(10)),
               Container(
@@ -60,8 +61,9 @@ class TereniDetalji extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                width: 30,
+                height: 30,
               ),
+              if(teren!.sportId == Sport.Fudbal)
               Container(
                 height: 50,
                 width: 170,

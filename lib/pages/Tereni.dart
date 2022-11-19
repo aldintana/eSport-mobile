@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:core';
 import 'package:e_sport_mobile/pages/KorisnikDetalji.dart';
+import 'package:e_sport_mobile/pages/Login.dart';
 import 'package:e_sport_mobile/pages/Termini.dart';
 import 'package:e_sport_mobile/pages/Turniri.dart';
 import 'package:flutter/material.dart';
@@ -108,7 +109,17 @@ class _TereniState extends State<Tereni> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => Turniri()));
-                })
+                }),
+            ListTile(
+              title: Text('Odjava'),
+              onTap: () {
+                APIService.Logout();
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Login()));
+              },
+            )
           ],
         ),
       ),
@@ -142,7 +153,7 @@ class _TereniState extends State<Tereni> {
 
   Future<List<Teren>> GetTereni([String? search]) async {
     Map<String, String>? queryParams = null;
-    if (search != null) queryParams = {'TekstPretraga': search};
+    if (search != null) queryParams = {'TekstPretraga': search, 'KorisnikId': APIService.loggedUserId.toString()};
     List<String> includeList = ['Sport'];
     var tereni = await APIService.Get('Teren', queryParams, includeList);
     if (tereni != null) {
