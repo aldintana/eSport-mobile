@@ -139,8 +139,12 @@ class _KorisnikDetaljiState extends State<KorisnikDetalji> {
             validator: (value) {
               if (value == null || value.isEmpty)
                 return 'Broj telefona je obavezan!';
-              else
-                return null;
+              else {
+                if (!isBrojTelefonaValid(value)) {
+                  return 'Format za broj telefona: 000-000-000 ili 000-000-0000';
+                } else
+                  return null;
+              }
             },
           ),
           Text(
@@ -233,6 +237,11 @@ class _KorisnikDetaljiState extends State<KorisnikDetalji> {
     RegExp regex = new RegExp(
         r"^(([^<>()[\]\\.,;:\s@']+(\.[^<>()[\]\\.,;:\s@']+)*)|('.+'))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$");
     return regex.hasMatch(email);
+  }
+
+  bool isBrojTelefonaValid(String brojTelefona) {
+    RegExp regex = new RegExp(r"^\d{3}-\d{3}-(\d{4}|\d{3})$");
+    return regex.hasMatch(brojTelefona);
   }
 
   bool isPasswordValid(String password) {
