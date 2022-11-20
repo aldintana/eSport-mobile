@@ -47,7 +47,6 @@ class Turnir {
   }
 
   Map<String, dynamic> toJson() => {
-    "id": id,
     "datumPocetka": datumPocetka == null ? null : datumPocetka!.toIso8601String(),
     "datumKraja": datumKraja == null ? null : datumKraja!.toIso8601String(),
     "vrijemePocetka": vrijemePocetka,
@@ -55,10 +54,9 @@ class Turnir {
     "terenId": terenId,
     "cjenovnikId": cjenovnikId,
     "ukupnaCijena": ukupnaCijena,
-    "terenNaziv": terenNaziv,
     "korisnikId": korisnikId,
     "naziv": naziv,
-    "isGenerisan": isGenerisan,
+    "isGenerisan": isGenerisan == null ? false : isGenerisan,
     "isPopust": isPopust
   };
 }

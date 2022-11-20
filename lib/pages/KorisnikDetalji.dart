@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:core';
 import 'dart:convert';
+import 'package:e_sport_mobile/pages/Tereni.dart';
 import 'package:flutter/material.dart';
 import 'package:e_sport_mobile/models/Korisnik.dart';
 import 'package:e_sport_mobile/services/APIService.dart';
@@ -193,7 +194,10 @@ class _KorisnikDetaljiState extends State<KorisnikDetalji> {
                     }
                     var result = await UpdateKorisnik();
                     if (result != null) {
-                      Navigator.of(context).pushReplacementNamed('/tereni');
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Tereni()));
                     } else {
                       showDialog<String>(
                           context: context,
@@ -227,9 +231,15 @@ class _KorisnikDetaljiState extends State<KorisnikDetalji> {
         brojTelefona: brojTelefonaController.text,
         lozinka: lozinkaController.text,
         lozinkaProvjera: lozinkaProvjeraController.text,
-        updateUloga: false);
+        updateUloga: false,
+        bodovi: APIService.bodovi);
     var result = await APIService.Put(
         APIService.loggedUserId, 'Korisnik', jsonEncode(korisnik).toString());
+
+    if(result != null && lozinkaController.text != "" && lozinkaController.text == lozinkaProvjeraController.text)
+    {
+      APIService.password = lozinkaController.text;
+    }
     return result;
   }
 

@@ -5,7 +5,6 @@ class Korisnik {
   final String? email;
   final String? brojTelefona;
   final String? korisnickoIme;
-  List<int>? ulogas;
   final bool? updateUloga;
   final String? lozinka;
   final String? lozinkaProvjera;
@@ -45,6 +44,7 @@ class Korisnik {
     "korisnickoIme": korisnickoIme,
     "updateUloga": updateUloga,
     "lozinka": lozinka,
-    "lozinkaProvjera": lozinkaProvjera
+    "lozinkaProvjera": lozinkaProvjera,
+    "bodovi": bodovi
   };
 }

@@ -98,15 +98,13 @@ class _TurniriPregled extends State<TurniriPregled> {
     SingleChildScrollView dataBody(List<Tim> list)
     {
       return SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
+        scrollDirection: Axis.vertical,
         child: DataTable(
           columns: [
             DataColumn(label: Text('Naziv')),
             DataColumn(label: Text('P')),
             DataColumn(label: Text('N')),
             DataColumn(label: Text('I')),
-            DataColumn(label: Text('DG')),
-            DataColumn(label: Text('PG')),
             DataColumn(label: Text('B'))
           ],
           rows: list
@@ -124,12 +122,6 @@ class _TurniriPregled extends State<TurniriPregled> {
                   ),
                   DataCell(
                     Text(tim!.brojPoraza.toString()),
-                  ),
-                  DataCell(
-                    Text(tim!.brojDatihGolova.toString()),
-                  ),
-                  DataCell(
-                    Text(tim!.brojPrimljenihGolova.toString()),
                   ),
                   DataCell(
                     Text(tim!.brojBodova.toString()),
