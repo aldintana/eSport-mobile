@@ -31,7 +31,7 @@ class APIService {
         }
       });
     }
-    String baseUrl = "http://192.168.0.33:44366/api/" + route;
+    String baseUrl = "http://10.0.2.2:44366/api/" + route;
     if (object != null) {
       baseUrl = baseUrl + '?' + queryParams;
     }
@@ -57,7 +57,7 @@ class APIService {
         }
       });
     }
-    String baseUrl = "http://192.168.0.33:44366/api/" + route + '/' + id.toString();
+    String baseUrl = "http://10.0.2.2:44366/api/" + route + '/' + id.toString();
     if (object != null) {
       baseUrl = baseUrl + '?' + queryParams;
     }
@@ -72,7 +72,7 @@ class APIService {
   }
 
   static Future<dynamic> Post(String route, String body) async {
-    String baseUrl="http://192.168.0.33:44366/api/"+route;
+    String baseUrl="http://10.0.2.2:44366/api/"+route;
     final String basicAuth =
         'Basic ' + base64Encode(utf8.encode('$username:$password'));
     var response = null;
@@ -109,7 +109,7 @@ class APIService {
   }
 
   static Future<dynamic> Put(int id, String route, String body) async {
-    String baseUrl="http://192.168.0.33:44366/api/"+route+'/'+id.toString();
+    String baseUrl="http://10.0.2.2:44366/api/"+route+'/'+id.toString();
     final String basicAuth =
         'Basic ' + base64Encode(utf8.encode('$username:$password'));
     var response = null;
