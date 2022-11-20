@@ -95,9 +95,11 @@ class APIService {
         body: body,
       );
     }
-
     if(response.statusCode == 200 && response.body.isEmpty){
       return "200";
+    }
+    if(response.statusCode == 204){
+      return "204";
     }
     if(response.statusCode != 200 && response.body.isEmpty){
       return "500";
@@ -132,7 +134,6 @@ class APIService {
         body: body,
       );
     }
-
     if(response.statusCode == 200 && response.body.isEmpty){
       return "200";
     }

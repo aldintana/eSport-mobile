@@ -45,7 +45,6 @@ class Termin {
     "terenId": terenId,
     "cjenovnikId": cjenovnikId,
     "ukupnaCijena": ukupnaCijena,
-    "terenNaziv": terenNaziv,
     "korisnikId": korisnikId,
     "isPopust": isPopust
   };

@@ -236,7 +236,7 @@ class _TurniriDetalji extends State<TurniriDetalji> {
                                 return;
                               }
                               var result = await CreateTurnir();
-                              if (result != null) {
+                              if (result != null && result != "204" && result != "500") {
                                 Navigator.of(context)
                                     .pushReplacementNamed('/tereni');
                               } else {
@@ -354,9 +354,11 @@ class _TurniriDetalji extends State<TurniriDetalji> {
         naziv: nazivController.text,
         isPopust: isPopust);
     result = await APIService.Post('Turnir', jsonEncode(turnir).toString());
-    APIService.bodovi += 20;
-    if (isPopust) {
-      APIService.bodovi -= 40;
+    if(result != null && result != "204" && result != "500") {
+      APIService.bodovi += 20;
+      if (isPopust) {
+        APIService.bodovi -= 40;
+      }
     }
 
     return result;

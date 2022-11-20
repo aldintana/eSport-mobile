@@ -211,7 +211,7 @@ class _TerminiDetalji extends State<TerminiDetalji> {
                                     return;
                                   }
                                   var result = await CreateTermin();
-                                  if (result != null) {
+                                  if (result != null && result != "204" && result != "500") {
                                     Navigator.of(context)
                                         .pushReplacementNamed('/tereni');
                                   } else {
@@ -220,9 +220,9 @@ class _TerminiDetalji extends State<TerminiDetalji> {
                                         builder: (BuildContext context) =>
                                             AlertDialog(
                                               title: const Text(
-                                                  'Pogrešni kredencijali'),
+                                                  'Nije moguće dodati termin'),
                                               content: const Text(
-                                                  'Pogrešno korisničko ime ili lozinka!'),
+                                                  'Nije moguće dodati termin. Pokušajte drugi datum/satnicu'),
                                               actions: <Widget>[
                                                 TextButton(
                                                     onPressed: () =>
@@ -324,9 +324,12 @@ class _TerminiDetalji extends State<TerminiDetalji> {
             _datum!.year, _datum!.month, _datum!.day, vrijemeZavrsetka!, 0, 0),
         isPopust: isPopust);
     result = await APIService.Post('Termin', jsonEncode(termin).toString());
-    APIService.bodovi += 10;
-    if (isPopust) {
-      APIService.bodovi -= 30;
+    if(result != null && result != "204" && result != "500")
+    {
+      APIService.bodovi += 10;
+      if (isPopust) {
+        APIService.bodovi -= 30;
+      }
     }
     return result;
   }
